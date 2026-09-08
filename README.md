@@ -69,17 +69,9 @@ Open your browser and visit: `http://127.0.0.1:5000`
 - **Email**: `demo@mybillingsystem.com`
 - **Password**: `demo123`
 
----
+--
 
-## ⚙️ Production Deployment Notes
+Website Link
 
-1. Set environment variable `SECRET_KEY` to a strong random secret.
-2. Set `DATABASE_URL` to a production PostgreSQL database:
-   ```bash
-   export DATABASE_URL="postgresql://user:password@localhost:5432/mybillingsystem"
-   ```
-3. Use Gunicorn / Waitress WSGI HTTP Server:
-   ```bash
-   pip install gunicorn
-   gunicorn -w 4 -b 0.0.0.0:5000 run:app
-   ```
+https://mybilling-pd65.onrender.com/
+

@@ -1,0 +1,51 @@
+/* Print-specific layout for standard A4 Invoice printing */
+@media print {
+    /* Hide non-invoice elements */
+    header, nav, footer, sidebar, .no-print, button, .btn, #sidebar, #mobile-menu, .toast {
+        display: none !important;
+    }
+
+    body, html {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 12pt !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .printable-invoice {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+    }
+
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    th, td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 8px 12px !important;
+        color: #0f172a !important;
+    }
+
+    th {
+        background-color: #f1f5f9 !important;
+        font-weight: 700 !important;
+    }
+
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+}

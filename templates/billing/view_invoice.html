@@ -1,0 +1,198 @@
+{% extends "app_base.html" %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} - MyBillingSystem{% endblock %}
+{% block header_title %}Invoice Details{% endblock %}
+{% block header_subtitle %}Manage, print, download PDF, or send invoice to customer via WhatsApp{% endblock %}
+
+{% block app_content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Action Toolbar (Hidden during print) -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-4 no-print">
+        <a href="{{ url_for('billing.history') }}" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1">
+            &larr; Back to Bill History
+        </a>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <!-- Print Button -->
+            <button onclick="window.print()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                <span>Print Invoice</span>
+            </button>
+
+            <!-- Download PDF Button -->
+            <button onclick="downloadPDF()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-brand-500/20 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+                <span>Download A4 PDF</span>
+            </button>
+
+            <!-- WhatsApp Share Button -->
+            <a href="{{ whatsapp_url }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-emerald-500/30 transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.84 9.84 0 0 0 12.04 2z"/></svg>
+                <span>Send on WhatsApp</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Printable Invoice Card Container -->
+    <div id="invoice-card" class="printable-invoice bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-lg space-y-8">
+        
+        <!-- Invoice Header: Shop Logo & Details -->
+        <div class="flex flex-col sm:flex-row items-start justify-between gap-6 border-b border-slate-200 pb-8">
+            <div class="flex items-start gap-4">
+                {% if shop.logo_path %}
+                    <img src="{{ url_for('static', filename='uploads/' + shop.logo_path) }}" alt="Shop Logo" class="w-20 h-20 rounded-2xl object-contain border p-1 bg-white">
+                {% else %}
+                    <div class="w-16 h-16 rounded-2xl bg-brand-600 text-white font-extrabold text-2xl flex items-center justify-center shadow-md">
+                        {{ shop.shop_name[0] | upper }}
+                    </div>
+                {% endif %}
+                <div class="space-y-1">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ shop.shop_name }}</h2>
+                    <p class="text-xs text-slate-600 font-medium">Proprietor: {{ shop.owner_name }}</p>
+                    <p class="text-xs text-slate-500 leading-relaxed max-w-xs">{{ shop.address }}{% if shop.city %}, {{ shop.city }}{% endif %}{% if shop.state %}, {{ shop.state }}{% endif %}</p>
+                    <p class="text-xs text-slate-600 font-medium">Mobile: {{ shop.mobile }} {% if shop.email %}| Email: {{ shop.email }}{% endif %}</p>
+                    {% if shop.gstin %}
+                        <p class="text-xs font-bold text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded inline-block">GSTIN: {{ shop.gstin }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="text-left sm:text-right space-y-2">
+                <span class="text-2xl font-black uppercase tracking-wider text-slate-400 block">TAX INVOICE</span>
+                <div class="space-y-1 text-xs">
+                    <p><span class="text-slate-500 font-semibold">Invoice No:</span> <strong class="text-brand-600 font-extrabold text-sm">{{ invoice.invoice_number }}</strong></p>
+                    <p><span class="text-slate-500 font-semibold">Date:</span> <strong>{{ invoice.invoice_date.strftime('%d %b %Y, %I:%M %p') }}</strong></p>
+                    <p><span class="text-slate-500 font-semibold">Payment Method:</span> <strong>{{ invoice.payment_method }}</strong></p>
+                    <div class="pt-1">
+                        {% if invoice.payment_status == 'Paid' %}
+                            <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">PAID</span>
+                        {% elif invoice.payment_status == 'Pending' %}
+                            <span class="px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300">UNPAID / PENDING</span>
+                        {% else %}
+                            <span class="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-300">PARTIAL</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Bill-To Info -->
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Billed To Customer:</span>
+                <h4 class="text-sm font-bold text-slate-900">{{ invoice.customer_rel.name if invoice.customer_rel else 'Walk-in Customer' }}</h4>
+                {% if invoice.customer_rel %}
+                    <p class="text-slate-600 font-medium">Mobile: {{ invoice.customer_rel.mobile }}</p>
+                    {% if invoice.customer_rel.address %}
+                        <p class="text-slate-500">{{ invoice.customer_rel.address }}</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="text-left sm:text-right">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Secure Invoice Verification:</span>
+                <p class="font-mono text-[10px] text-slate-400 truncate">Token: {{ invoice.secure_token }}</p>
+                <p class="text-[11px] text-slate-500 mt-1">Verified Digital SaaS Receipt</p>
+            </div>
+        </div>
+
+        <!-- Itemized Products Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 text-slate-700 font-bold uppercase border-y border-slate-300">
+                        <th class="py-3 px-3 w-10">#</th>
+                        <th class="py-3 px-3">Item Description</th>
+                        <th class="py-3 px-3 text-center w-16">Qty</th>
+                        <th class="py-3 px-3 text-center w-16">Unit</th>
+                        <th class="py-3 px-3 text-right w-24">Rate</th>
+                        <th class="py-3 px-3 text-right w-20">Disc %</th>
+                        <th class="py-3 px-3 text-right w-20">GST %</th>
+                        <th class="py-3 px-3 text-right w-28">Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 font-medium text-slate-800">
+                    {% for item in invoice.items %}
+                        <tr>
+                            <td class="py-3 px-3 text-slate-400 font-bold">{{ loop.index }}</td>
+                            <td class="py-3 px-3 font-bold text-slate-900">{{ item.product_name }}</td>
+                            <td class="py-3 px-3 text-center font-bold">{{ item.quantity }}</td>
+                            <td class="py-3 px-3 text-center text-slate-500">{{ item.unit }}</td>
+                            <td class="py-3 px-3 text-right">{{ item.rate | inr }}</td>
+                            <td class="py-3 px-3 text-right text-slate-500">{{ item.discount }}%</td>
+                            <td class="py-3 px-3 text-right text-slate-500">{{ item.gst_rate }}%</td>
+                            <td class="py-3 px-3 text-right font-extrabold text-slate-900">{{ item.line_total | inr }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary & Totals breakdown -->
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-6 border-t border-slate-200 pt-6">
+            <div class="space-y-2 text-xs text-slate-500 max-w-sm">
+                {% if invoice.notes %}
+                    <p class="font-semibold text-slate-700">Notes: {{ invoice.notes }}</p>
+                {% endif %}
+                <p class="text-slate-400 italic">{{ shop.footer_note or 'Thank you for shopping with us!' }}</p>
+            </div>
+
+            <div class="w-full sm:w-72 space-y-2 text-xs">
+                <div class="flex justify-between text-slate-600">
+                    <span>Subtotal (Gross):</span>
+                    <span class="font-bold text-slate-900">{{ invoice.subtotal | inr }}</span>
+                </div>
+                <div class="flex justify-between text-rose-600">
+                    <span>Total Discount:</span>
+                    <span class="font-bold">-{{ invoice.discount_amount | inr }}</span>
+                </div>
+                <div class="flex justify-between text-slate-600 border-t pt-1">
+                    <span>Taxable Amount:</span>
+                    <span class="font-bold text-slate-900">{{ invoice.taxable_amount | inr }}</span>
+                </div>
+
+                {% if shop.tax_type == 'GST' and invoice.total_tax > 0 %}
+                    <div class="flex justify-between text-slate-500 pl-2">
+                        <span>CGST:</span>
+                        <span>{{ invoice.cgst_amount | inr }}</span>
+                    </div>
+                    <div class="flex justify-between text-slate-500 pl-2">
+                        <span>SGST:</span>
+                        <span>{{ invoice.sgst_amount | inr }}</span>
+                    </div>
+                    <div class="flex justify-between text-indigo-900 font-bold border-t pt-1">
+                        <span>Total GST Tax:</span>
+                        <span>{{ invoice.total_tax | inr }}</span>
+                    </div>
+                {% endif %}
+
+                <div class="flex justify-between text-base font-black text-slate-900 border-t-2 border-slate-900 pt-2">
+                    <span>Grand Total:</span>
+                    <span class="text-brand-600">{{ invoice.grand_total | inr }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer watermark -->
+        <div class="text-center border-t border-slate-100 pt-4 text-[10px] text-slate-400 font-semibold">
+            Computer Generated Tax Invoice • Powered by MyBillingSystem
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function downloadPDF() {
+        const element = document.getElementById('invoice-card');
+        const opt = {
+            margin:       [10, 10, 10, 10],
+            filename:     'Invoice_' + '{{ invoice.invoice_number }}' + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+{% endblock %}

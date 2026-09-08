@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Blog & Small Business Guides - MyBillingSystem{% endblock %}
+{% block meta_description %}Learn how to manage shop billing, GST tax filing, inventory management, and WhatsApp billing for retail stores in India.{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div class="text-center max-w-3xl mx-auto space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Knowledge Hub</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Small Business & Billing Guides</h1>
+            <p class="text-slate-600 text-lg">Practical advice for Indian shop owners, retailers, and entrepreneurs.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for slug, post in posts.items() %}
+                <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200 card-hover space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 text-xs font-semibold text-slate-400">
+                            <span>{{ post.date }}</span>
+                            <span>•</span>
+                            <span>{{ post.author }}</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-900 hover:text-brand-600 transition">
+                            <a href="{{ url_for('public.blog_detail', slug=slug) }}">{{ post.title }}</a>
+                        </h2>
+                        <p class="text-slate-600 text-sm leading-relaxed">{{ post.desc }}</p>
+                    </div>
+
+                    <div>
+                        <a href="{{ url_for('public.blog_detail', slug=slug) }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 hover:underline">
+                            Read Full Article &rarr;
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

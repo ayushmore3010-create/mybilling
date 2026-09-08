@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy - MyBillingSystem{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 space-y-6">
+        <h1 class="text-3xl font-extrabold text-slate-900">Privacy Policy</h1>
+        <p class="text-xs text-slate-400">Last updated: August 2026</p>
+
+        <div class="prose text-slate-700 space-y-4 text-sm leading-relaxed">
+            <p>At MyBillingSystem, we take your shop data privacy seriously. This policy outlines how we collect, store, and safeguard your account details, product inventory, and customer invoices.</p>
+            <h3 class="text-lg font-bold text-slate-900">1. Data Collection</h3>
+            <p>We collect information you explicitly provide when creating your account, including shop name, owner contact details, address, and GSTIN.</p>
+            <h3 class="text-lg font-bold text-slate-900">2. Data Security</h3>
+            <p>All database records are isolated per shop using strict multi-tenant architecture. Passwords are protected using PBKDF2/Bcrypt cryptographic hashing.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends "app_base.html" %}
+
+{% block title %}Product Inventory - MyBillingSystem{% endblock %}
+{% block header_title %}Product Inventory{% endblock %}
+{% block header_subtitle %}Manage product pricing, SKU, GST rates, and stock levels{% endblock %}
+
+{% block app_content %}
+<div class="space-y-6">
+    <!-- Top Action Bar -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Search & Filter Form -->
+        <form action="{{ url_for('products.index') }}" method="GET" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <div class="relative flex-grow md:w-64">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search by product name or SKU..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                <svg class="w-5 h-5 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+
+            <select name="category_id" onchange="this.form.submit()" class="px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium bg-white">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if current_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-sm hover:bg-slate-900 transition">Filter</button>
+            {% if search_query or current_category %}
+                <a href="{{ url_for('products.index') }}" class="text-xs text-rose-600 font-bold hover:underline">Reset Filters</a>
+            {% endif %}
+        </form>
+
+        <button onclick="document.getElementById('add-product-modal').classList.remove('hidden')" class="w-full md:w-auto px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-500/20 transition flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+            <span>Add New Product</span>
+        </button>
+    </div>
+
+    <!-- Product Table -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-700">
+                <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="py-4 px-6">Product Name</th>
+                        <th class="py-4 px-4">SKU</th>
+                        <th class="py-4 px-4">Category</th>
+                        <th class="py-4 px-4 text-right">Selling Price</th>
+                        <th class="py-4 px-4 text-center">GST %</th>
+                        <th class="py-4 px-4 text-center">Stock</th>
+                        <th class="py-4 px-4 text-center">Unit</th>
+                        <th class="py-4 px-6 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% if products %}
+                        {% for p in products %}
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="py-4 px-6 font-bold text-slate-900">{{ p.name }}</td>
+                                <td class="py-4 px-4 font-mono text-xs text-slate-500">{{ p.sku or '-' }}</td>
+                                <td class="py-4 px-4">
+                                    <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
+                                        {{ p.category_rel.name if p.category_rel else 'General' }}
+                                    </span>
+                                </td>
+                                <td class="py-4 px-4 text-right font-extrabold text-slate-900">{{ p.selling_price | inr }}</td>
+                                <td class="py-4 px-4 text-center font-semibold text-slate-600">{{ p.gst_rate }}%</td>
+                                <td class="py-4 px-4 text-center">
+                                    {% if p.stock_qty <= 5 %}
+                                        <span class="px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-extrabold" title="Low Stock Warning">
+                                            {{ p.stock_qty }} (Low)
+                                        </span>
+                                    {% else %}
+                                        <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                                            {{ p.stock_qty }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-4 px-4 text-center text-xs font-medium text-slate-500">{{ p.unit }}</td>
+                                <td class="py-4 px-6 text-right space-x-2">
+                                    <button onclick="openEditModal({{ p.id }}, '{{ p.name }}', '{{ p.sku or '' }}', {{ p.category_id or 0 }}, {{ p.purchase_price }}, {{ p.selling_price }}, {{ p.gst_rate }}, {{ p.stock_qty }}, '{{ p.unit }}')" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs hover:bg-indigo-100">Edit</button>
+                                    <form action="{{ url_for('products.delete', product_id=p.id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this product?');">
+                                        <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 font-bold text-xs hover:bg-rose-100">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="py-12 text-center text-slate-400 text-sm font-medium">
+                                No products found. Click "Add New Product" to populate your inventory!
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div id="add-product-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b pb-4">
+            <h3 class="text-xl font-extrabold text-slate-900">Add New Product</h3>
+            <button onclick="document.getElementById('add-product-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+        </div>
+
+        <form action="{{ url_for('products.add') }}" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Product Name <span class="text-rose-500">*</span></label>
+                <input type="text" name="name" required placeholder="e.g. Cotton T-Shirt / Basmati Rice" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">SKU / Item Code</label>
+                    <input type="text" name="sku" placeholder="SKU-1001" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+                    <select name="category_id" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium bg-white">
+                        <option value="">-- Select Category --</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Or Add New Category</label>
+                <input type="text" name="new_category" placeholder="e.g. Electronics / Apparel / Groceries" class="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm font-medium">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Purchase Price (₹)</label>
+                    <input type="number" step="any" name="purchase_price" value="0.00" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Selling Price (₹) <span class="text-rose-500">*</span></label>
+                    <input type="number" step="any" name="selling_price" value="0.00" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-extrabold text-brand-600">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">GST %</label>
+                    <select name="gst_rate" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-bold bg-white">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18" selected>18%</option>
+                        <option value="28">28%</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Initial Stock</label>
+                    <input type="number" step="any" name="stock_qty" value="10" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-bold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Unit</label>
+                    <select name="unit" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium bg-white">
+                        <option value="Piece">Piece</option>
+                        <option value="Kg">Kg</option>
+                        <option value="Gram">Gram</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Meter">Meter</option>
+                        <option value="Box">Box</option>
+                        <option value="Packet">Packet</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('add-product-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm">Cancel</button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md">Save Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EDIT PRODUCT MODAL -->
+<div id="edit-product-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b pb-4">
+            <h3 class="text-xl font-extrabold text-slate-900">Edit Product</h3>
+            <button onclick="document.getElementById('edit-product-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+        </div>
+
+        <form id="edit-product-form" action="" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Product Name</label>
+                <input type="text" id="edit-name" name="name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">SKU</label>
+                    <input type="text" id="edit-sku" name="sku" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+                    <select id="edit-category" name="category_id" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium bg-white">
+                        <option value="">-- Select Category --</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Purchase Price (₹)</label>
+                    <input type="number" step="any" id="edit-purchase" name="purchase_price" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Selling Price (₹)</label>
+                    <input type="number" step="any" id="edit-selling" name="selling_price" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-extrabold text-brand-600">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">GST %</label>
+                    <select id="edit-gst" name="gst_rate" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-bold bg-white">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                        <option value="28">28%</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Stock Qty</label>
+                    <input type="number" step="any" id="edit-stock" name="stock_qty" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-bold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Unit</label>
+                    <select id="edit-unit" name="unit" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium bg-white">
+                        <option value="Piece">Piece</option>
+                        <option value="Kg">Kg</option>
+                        <option value="Gram">Gram</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Meter">Meter</option>
+                        <option value="Box">Box</option>
+                        <option value="Packet">Packet</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('edit-product-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm">Cancel</button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md">Update Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditModal(id, name, sku, categoryId, purchase, selling, gst, stock, unit) {
+        document.getElementById('edit-product-form').action = "/products/edit/" + id;
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-sku').value = sku;
+        document.getElementById('edit-category').value = categoryId;
+        document.getElementById('edit-purchase').value = purchase;
+        document.getElementById('edit-selling').value = selling;
+        document.getElementById('edit-gst').value = gst;
+        document.getElementById('edit-stock').value = stock;
+        document.getElementById('edit-unit').value = unit;
+        document.getElementById('edit-product-modal').classList.remove('hidden');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "app_base.html" %}
+
+{% block title %}Sales & Reports - MyBillingSystem{% endblock %}
+{% block header_title %}Sales & GST Reports{% endblock %}
+{% block header_subtitle %}Analyze business performance, tax breakdown, and export CSV reports{% endblock %}
+
+{% block app_content %}
+<div class="space-y-8">
+    <!-- Top Action Bar with Export -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div>
+            <h2 class="text-lg font-bold text-slate-900">Financial Summary</h2>
+            <p class="text-xs text-slate-500">Comprehensive overview of revenue and GST collections</p>
+        </div>
+        <a href="{{ url_for('reports.export_csv') }}" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-emerald-500/20 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+            <span>Export Sales CSV</span>
+        </a>
+    </div>
+
+    <!-- Revenue & GST Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Revenue</span>
+            <div class="text-3xl font-black text-slate-900">{{ total_revenue | inr }}</div>
+            <span class="text-xs text-emerald-600 font-bold">Gross sales realized</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Tax Collected</span>
+            <div class="text-3xl font-black text-indigo-600">{{ total_tax_collected | inr }}</div>
+            <span class="text-xs text-indigo-600 font-bold">CGST + SGST + IGST</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">CGST Collected</span>
+            <div class="text-2xl font-bold text-slate-800">{{ total_cgst | inr }}</div>
+            <span class="text-xs text-slate-400 font-medium">Central GST component</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">SGST Collected</span>
+            <div class="text-2xl font-bold text-slate-800">{{ total_sgst | inr }}</div>
+            <span class="text-xs text-slate-400 font-medium">State GST component</span>
+        </div>
+    </div>
+
+    <!-- Payment Method Distribution & Top Products -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Payment Methods Table -->
+        <div class="lg:col-span-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-b pb-3">💳 Payment Method Distribution</h3>
+            <table class="w-full text-left text-sm text-slate-700">
+                <thead class="bg-slate-50 uppercase text-[11px] font-bold text-slate-500 border-y">
+                    <tr>
+                        <th class="py-3 px-4">Method</th>
+                        <th class="py-3 px-4 text-center">Bills</th>
+                        <th class="py-3 px-4 text-right">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for pm in pm_stats %}
+                        <tr>
+                            <td class="py-3 px-4 font-bold text-slate-900">{{ pm[0] }}</td>
+                            <td class="py-3 px-4 text-center font-semibold text-slate-600">{{ pm[1] }}</td>
+                            <td class="py-3 px-4 text-right font-extrabold text-slate-900">{{ pm[2] | inr }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="3" class="py-4 text-center text-slate-400 text-xs">No payment records.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Top Selling Products -->
+        <div class="lg:col-span-6 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-b pb-3">🔥 Top Selling Products</h3>
+            <table class="w-full text-left text-sm text-slate-700">
+                <thead class="bg-slate-50 uppercase text-[11px] font-bold text-slate-500 border-y">
+                    <tr>
+                        <th class="py-3 px-4">Product</th>
+                        <th class="py-3 px-4 text-center">Qty Sold</th>
+                        <th class="py-3 px-4 text-right">Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for item in top_items %}
+                        <tr>
+                            <td class="py-3 px-4 font-bold text-slate-900">{{ item[0] }}</td>
+                            <td class="py-3 px-4 text-center font-bold text-brand-600">{{ item[1] }}</td>
+                            <td class="py-3 px-4 text-right font-extrabold text-slate-900">{{ item[2] | inr }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="3" class="py-4 text-center text-slate-400 text-xs">No sales data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - MyBillingSystem Blog{% endblock %}
+{% block meta_description %}{{ post.desc }}{% endblock %}
+
+{% block content %}
+<article class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 space-y-8">
+        <div class="space-y-4 border-b border-slate-200 pb-8">
+            <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold rounded-full">GST Guide</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{{ post.title }}</h1>
+            <div class="flex items-center gap-3 text-xs text-slate-400 font-semibold">
+                <span>Published on {{ post.date }}</span>
+                <span>•</span>
+                <span>By {{ post.author }}</span>
+            </div>
+        </div>
+
+        <div class="prose max-w-none text-slate-700 space-y-6 text-base leading-relaxed">
+            <p>Under Indian Goods and Services Tax (GST) regulations, every registered retailer and shop owner must issue a clear Tax Invoice for taxable sales containing mandatory details like GSTIN, invoice serial number, line item tax breakdown, and HSN/SAC codes.</p>
+
+            <h2 class="text-2xl font-bold text-slate-900">Understanding CGST, SGST, and IGST</h2>
+            <p>For sales made within the same state (Intra-state sales), GST is split equally into <strong>CGST (Central GST)</strong> and <strong>SGST (State GST)</strong>. For example, on an 18% GST product, 9% is CGST and 9% is SGST. For inter-state sales, full 18% is applied as <strong>IGST (Integrated GST)</strong>.</p>
+
+            <h2 class="text-2xl font-bold text-slate-900">How MyBillingSystem Automates GST Calculation</h2>
+            <p>MyBillingSystem takes away the headache of manual math. When creating a bill, simply select the GST percentage (0%, 5%, 12%, 18%, 28%) for each item. The system instantly computes line taxes, CGST, SGST, and grand totals for printing or sending via WhatsApp.</p>
+        </div>
+
+        <div class="bg-brand-50 p-8 rounded-3xl border border-brand-200 text-center space-y-4">
+            <h3 class="text-xl font-bold text-slate-900">Start Creating GST Compliant Bills Today</h3>
+            <a href="{{ url_for('auth.register') }}" class="inline-block px-8 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md">Create Free Account &rarr;</a>
+        </div>
+    </div>
+</article>
+{% endblock %}

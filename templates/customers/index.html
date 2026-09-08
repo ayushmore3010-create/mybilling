@@ -1,0 +1,185 @@
+{% extends "app_base.html" %}
+
+{% block title %}Customer Directory - MyBillingSystem{% endblock %}
+{% block header_title %}Customer Directory{% endblock %}
+{% block header_subtitle %}Manage customer contacts, WhatsApp numbers, and invoice history{% endblock %}
+
+{% block app_content %}
+<div class="space-y-6">
+    <!-- Top Action Bar -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <form action="{{ url_for('customers.index') }}" method="GET" class="flex items-center gap-3 w-full md:w-auto">
+            <div class="relative flex-grow md:w-80">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search customer name or mobile..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                <svg class="w-5 h-5 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-sm hover:bg-slate-900 transition">Search</button>
+            {% if search_query %}
+                <a href="{{ url_for('customers.index') }}" class="text-xs text-rose-600 font-bold hover:underline">Reset</a>
+            {% endif %}
+        </form>
+
+        <button onclick="document.getElementById('add-customer-modal').classList.remove('hidden')" class="w-full md:w-auto px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-500/20 transition flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+            <span>Add New Customer</span>
+        </button>
+    </div>
+
+    <!-- Customer Table -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-700">
+                <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="py-4 px-6">Customer Name</th>
+                        <th class="py-4 px-4">Mobile / WhatsApp</th>
+                        <th class="py-4 px-4">Address</th>
+                        <th class="py-4 px-4 text-center">Invoices</th>
+                        <th class="py-4 px-4 text-right">Total Spent</th>
+                        <th class="py-4 px-6 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% if customers %}
+                        {% for c in customers %}
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="py-4 px-6 font-bold text-slate-900 flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-brand-50 text-brand-700 font-extrabold text-xs flex items-center justify-center border border-brand-200">
+                                        {{ c.name[0] | upper }}
+                                    </div>
+                                    <div>
+                                        <span>{{ c.name }}</span>
+                                        {% if c.email %}
+                                            <span class="block text-[11px] font-normal text-slate-400">{{ c.email }}</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 font-semibold text-slate-800">
+                                    {{ c.mobile }}
+                                    <span class="block text-[11px] text-emerald-600 font-bold">WhatsApp: {{ c.whatsapp or c.mobile }}</span>
+                                </td>
+                                <td class="py-4 px-4 text-xs text-slate-500 max-w-xs truncate">{{ c.address or '-' }}</td>
+                                <td class="py-4 px-4 text-center">
+                                    <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-bold">{{ c.total_invoices or 0 }}</span>
+                                </td>
+                                <td class="py-4 px-4 text-right font-extrabold text-slate-900">{{ (c.total_spent or 0.0) | inr }}</td>
+                                <td class="py-4 px-6 text-right space-x-2">
+                                    <button onclick="openEditCustomerModal({{ c.id }}, '{{ c.name }}', '{{ c.mobile }}', '{{ c.whatsapp or '' }}', '{{ c.email or '' }}', '{{ c.address or '' }}')" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs hover:bg-indigo-100">Edit</button>
+                                    <form action="{{ url_for('customers.delete', customer_id=c.id) }}" method="POST" class="inline" onsubmit="return confirm('Delete customer profile?');">
+                                        <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 font-bold text-xs hover:bg-rose-100">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400 text-sm font-medium">
+                                No customers registered yet. Click "Add New Customer" to record customer contact details!
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ADD CUSTOMER MODAL -->
+<div id="add-customer-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl space-y-6 relative">
+        <div class="flex items-center justify-between border-b pb-4">
+            <h3 class="text-xl font-extrabold text-slate-900">Add New Customer</h3>
+            <button onclick="document.getElementById('add-customer-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+        </div>
+
+        <form action="{{ url_for('customers.add') }}" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Customer Name <span class="text-rose-500">*</span></label>
+                <input type="text" name="name" required placeholder="e.g. Ramesh Kumar" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mobile Number <span class="text-rose-500">*</span></label>
+                    <input type="tel" name="mobile" required placeholder="9876543210" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">WhatsApp Number</label>
+                    <input type="tel" name="whatsapp" placeholder="Same as mobile" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
+                <input type="email" name="email" placeholder="customer@example.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Address</label>
+                <textarea name="address" rows="2" placeholder="Street, City, Pincode..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium"></textarea>
+            </div>
+
+            <div class="pt-4 border-t flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('add-customer-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm">Cancel</button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md">Save Customer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EDIT CUSTOMER MODAL -->
+<div id="edit-customer-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl space-y-6 relative">
+        <div class="flex items-center justify-between border-b pb-4">
+            <h3 class="text-xl font-extrabold text-slate-900">Edit Customer Profile</h3>
+            <button onclick="document.getElementById('edit-customer-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+        </div>
+
+        <form id="edit-customer-form" action="" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Customer Name</label>
+                <input type="text" id="edit-cust-name" name="name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mobile Number</label>
+                    <input type="tel" id="edit-cust-mobile" name="mobile" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">WhatsApp Number</label>
+                    <input type="tel" id="edit-cust-whatsapp" name="whatsapp" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
+                <input type="email" id="edit-cust-email" name="email" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Address</label>
+                <textarea id="edit-cust-address" name="address" rows="2" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium"></textarea>
+            </div>
+
+            <div class="pt-4 border-t flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('edit-customer-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm">Cancel</button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md">Update Customer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditCustomerModal(id, name, mobile, whatsapp, email, address) {
+        document.getElementById('edit-customer-form').action = "/customers/edit/" + id;
+        document.getElementById('edit-cust-name').value = name;
+        document.getElementById('edit-cust-mobile').value = mobile;
+        document.getElementById('edit-cust-whatsapp').value = whatsapp;
+        document.getElementById('edit-cust-email').value = email;
+        document.getElementById('edit-cust-address').value = address;
+        document.getElementById('edit-customer-modal').classList.remove('hidden');
+    }
+</script>
+{% endblock %}

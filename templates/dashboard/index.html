@@ -1,0 +1,229 @@
+{% extends "app_base.html" %}
+
+{% block title %}Dashboard - MyBillingSystem{% endblock %}
+{% block header_title %}Shop Overview{% endblock %}
+{% block header_subtitle %}Real-time sales analytics and inventory warnings for {{ shop.shop_name }}{% endblock %}
+
+{% block app_content %}
+<div class="space-y-8">
+    
+    <!-- Top Stats Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+        <!-- Today's Sales -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2 card-hover">
+            <div class="flex items-center justify-between text-slate-500">
+                <span class="text-xs font-bold uppercase tracking-wider">Today's Sales</span>
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">₹</div>
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900">{{ todays_sales | inr }}</div>
+            <p class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                <span>↑ Revenue calculated today</span>
+            </p>
+        </div>
+
+        <!-- Total Sales -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2 card-hover">
+            <div class="flex items-center justify-between text-slate-500">
+                <span class="text-xs font-bold uppercase tracking-wider">Total Sales</span>
+                <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">📈</div>
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900">{{ total_sales | inr }}</div>
+            <p class="text-[11px] text-slate-400 font-medium">Lifetime revenue</p>
+        </div>
+
+        <!-- Today's Bills -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2 card-hover">
+            <div class="flex items-center justify-between text-slate-500">
+                <span class="text-xs font-bold uppercase tracking-wider">Today's Bills</span>
+                <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">📄</div>
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900">{{ todays_bills }}</div>
+            <p class="text-[11px] text-slate-400 font-medium">Invoices generated today</p>
+        </div>
+
+        <!-- Customers -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2 card-hover">
+            <div class="flex items-center justify-between text-slate-500">
+                <span class="text-xs font-bold uppercase tracking-wider">Customers</span>
+                <div class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold">👥</div>
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900">{{ total_customers }}</div>
+            <p class="text-[11px] text-slate-400 font-medium">Saved customer profiles</p>
+        </div>
+
+        <!-- Products -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-2 card-hover">
+            <div class="flex items-center justify-between text-slate-500">
+                <span class="text-xs font-bold uppercase tracking-wider">Products</span>
+                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">📦</div>
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900">{{ total_products }}</div>
+            <p class="text-[11px] text-slate-400 font-medium">Active inventory items</p>
+        </div>
+    </div>
+
+    <!-- Sales Chart & Low Stock Alerts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Sales Chart (7 Days) -->
+        <div class="lg:col-span-8 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">7-Day Sales Trend</h3>
+                    <p class="text-xs text-slate-500">Daily revenue breakdown for the past week</p>
+                </div>
+                <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold rounded-full">Chart</span>
+            </div>
+            <div class="h-64">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Low Stock Items Warning -->
+        <div class="lg:col-span-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+                        Low Stock Alert
+                    </h3>
+                    <a href="{{ url_for('products.index') }}" class="text-xs font-bold text-brand-600 hover:underline">View All</a>
+                </div>
+
+                {% if low_stock_products %}
+                    <div class="space-y-2.5">
+                        {% for prod in low_stock_products %}
+                            <div class="p-3 bg-rose-50/60 rounded-xl border border-rose-100 flex items-center justify-between">
+                                <div class="truncate">
+                                    <h4 class="text-xs font-bold text-slate-800 truncate">{{ prod.name }}</h4>
+                                    <p class="text-[11px] text-slate-500">{{ prod.unit }} • Price: {{ prod.selling_price | inr }}</p>
+                                </div>
+                                <span class="px-2.5 py-1 bg-rose-600 text-white font-extrabold text-xs rounded-lg shadow-sm">
+                                    {{ prod.stock_qty }} left
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-slate-400 space-y-2">
+                        <svg class="w-10 h-10 mx-auto text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-xs font-medium text-slate-600">All inventory levels are healthy!</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <a href="{{ url_for('billing.create') }}" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm text-center shadow-md shadow-brand-500/20 transition">
+                + Create New Bill Now
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Invoices Table -->
+    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-lg font-bold text-slate-900">Recent Invoices</h3>
+                <p class="text-xs text-slate-500">Latest transactions processed in your shop</p>
+            </div>
+            <a href="{{ url_for('billing.history') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+                View Full Bill History &rarr;
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-700">
+                <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-y border-slate-200">
+                    <tr>
+                        <th class="py-3.5 px-4">Invoice #</th>
+                        <th class="py-3.5 px-4">Date</th>
+                        <th class="py-3.5 px-4">Customer</th>
+                        <th class="py-3.5 px-4 text-right">Amount</th>
+                        <th class="py-3.5 px-4 text-center">Payment</th>
+                        <th class="py-3.5 px-4 text-center">Status</th>
+                        <th class="py-3.5 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% if recent_invoices %}
+                        {% for inv in recent_invoices %}
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="py-3.5 px-4 font-bold text-brand-600">
+                                    <a href="{{ url_for('billing.view_invoice', invoice_id=inv.id) }}">{{ inv.invoice_number }}</a>
+                                </td>
+                                <td class="py-3.5 px-4 text-xs text-slate-500">{{ inv.invoice_date.strftime('%d %b %Y, %I:%M %p') }}</td>
+                                <td class="py-3.5 px-4 font-medium text-slate-900">
+                                    {{ inv.customer_rel.name if inv.customer_rel else 'Walk-in Customer' }}
+                                </td>
+                                <td class="py-3.5 px-4 text-right font-extrabold text-slate-900">{{ inv.grand_total | inr }}</td>
+                                <td class="py-3.5 px-4 text-center">
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">{{ inv.payment_method }}</span>
+                                </td>
+                                <td class="py-3.5 px-4 text-center">
+                                    {% if inv.payment_status == 'Paid' %}
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PAID</span>
+                                    {% elif inv.payment_status == 'Pending' %}
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">PENDING</span>
+                                    {% else %}
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">PARTIAL</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3.5 px-4 text-right space-x-2">
+                                    <a href="{{ url_for('billing.view_invoice', invoice_id=inv.id) }}" class="px-3 py-1.5 rounded-lg bg-brand-50 text-brand-700 font-bold text-xs hover:bg-brand-100">View</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="py-8 text-center text-slate-400 text-xs font-medium">
+                                No invoices created yet. Click "+ Create New Bill" to generate your first invoice!
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Render Chart.js Script -->
+<script>
+    const ctx = document.getElementById('salesChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_dates | tojson }},
+                datasets: [{
+                    label: 'Daily Revenue (₹)',
+                    data: {{ chart_totals | tojson }},
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#4f46e5'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

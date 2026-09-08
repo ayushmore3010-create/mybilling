@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Access Forbidden (403) - MyBillingSystem{% endblock %}
+
+{% block content %}
+<section class="py-20 bg-slate-50 min-h-[70vh] flex items-center justify-center text-center">
+    <div class="max-w-md mx-auto px-4 space-y-6">
+        <div class="w-20 h-20 rounded-3xl bg-amber-50 text-amber-600 flex items-center justify-center font-extrabold text-3xl mx-auto border border-amber-200">
+            403
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-900">Access Restricted</h1>
+        <p class="text-slate-500 text-sm">You do not have authorization to view this shop's data.</p>
+        <div>
+            <a href="{{ url_for('dashboard.index') }}" class="px-6 py-3 rounded-xl font-bold text-sm bg-brand-600 text-white shadow-md">Return to Dashboard &rarr;</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

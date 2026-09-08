@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - MyBillingSystem Blog{% endblock %}
+
+{% block content %}
+<article class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 space-y-8">
+        <div class="space-y-4 border-b border-slate-200 pb-8">
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full">WhatsApp Billing</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{{ post.title }}</h1>
+            <div class="flex items-center gap-3 text-xs text-slate-400 font-semibold">
+                <span>Published on {{ post.date }}</span>
+                <span>•</span>
+                <span>By {{ post.author }}</span>
+            </div>
+        </div>
+
+        <div class="prose max-w-none text-slate-700 space-y-6 text-base leading-relaxed">
+            <p>Paper bill rolls cost Indian shop owners thousands of rupees every year in thermal paper and printer ink. Digital WhatsApp invoicing eliminates paper costs while giving customers a permanent, searchable record of their purchase on their smartphone.</p>
+
+            <h2 class="text-2xl font-bold text-slate-900">Benefits of WhatsApp Digital Invoicing</h2>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>Zero thermal paper cost</li>
+                <li>Instant delivery to customer's WhatsApp</li>
+                <li>Customer can view or download A4 PDF anytime</li>
+                <li>Builds strong customer trust & digital store presence</li>
+            </ul>
+        </div>
+    </div>
+</article>
+{% endblock %}

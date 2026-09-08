@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - MyBillingSystem Blog{% endblock %}
+
+{% block content %}
+<article class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 space-y-8">
+        <div class="space-y-4 border-b border-slate-200 pb-8">
+            <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-full">Comparison</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{{ post.title }}</h1>
+            <div class="flex items-center gap-3 text-xs text-slate-400 font-semibold">
+                <span>Published on {{ post.date }}</span>
+                <span>•</span>
+                <span>By {{ post.author }}</span>
+            </div>
+        </div>
+
+        <div class="prose max-w-none text-slate-700 space-y-6 text-base leading-relaxed">
+            <p>For decades, Kirana stores and retail shop owners relied on paper bill books and carbon copies. However, as customer expectations evolve and GST compliance becomes mandatory, manual billing creates bottleneck delays during peak hours.</p>
+
+            <h2 class="text-2xl font-bold text-slate-900">Key Differences</h2>
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                <p><strong>Manual Billing:</strong> Prone to manual math errors, slow checkout queues, no automated GST reports, risk of lost paper bill books.</p>
+                <p class="mt-3"><strong>MyBillingSystem Digital Billing:</strong> Instant automatic calculations, low stock warnings, 1-click WhatsApp sharing, 100% secure cloud data.</p>
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

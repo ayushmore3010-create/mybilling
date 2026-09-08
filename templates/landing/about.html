@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - MyBillingSystem{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 space-y-8">
+        <div class="space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Our Story</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Empowering Indian Shop Owners</h1>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                MyBillingSystem was founded with a single mission: to provide Indian retail shops and local businesses with a fast, modern, and trustworthy digital billing platform.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                <h3 class="font-bold text-slate-900 text-lg">What Problem We Solve</h3>
+                <p class="text-sm text-slate-600">Manual billing is slow, prone to arithmetic mistakes, and hard to track. We eliminate paper waste and help shop owners manage inventory and send WhatsApp bills instantly.</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                <h3 class="font-bold text-slate-900 text-lg">Built for India 🇮🇳</h3>
+                <p class="text-sm text-slate-600">Designed natively with INR ₹ currency support, GST calculations (CGST, SGST, IGST), Kirana store product units (Kg, Gram, Liter, Piece), and mobile responsiveness.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

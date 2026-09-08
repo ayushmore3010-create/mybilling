@@ -1,0 +1,96 @@
+{% extends "app_base.html" %}
+
+{% block title %}Shop Profile & Settings - MyBillingSystem{% endblock %}
+{% block header_title %}Shop Profile & Settings{% endblock %}
+{% block header_subtitle %}Configure shop details, logo, invoice footer, and GST preferences{% endblock %}
+
+{% block app_content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex items-center justify-between border-b pb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">Shop Profile Details</h2>
+                <p class="text-xs text-slate-500">Update information displayed on your printed and digital invoices</p>
+            </div>
+            {% if shop.logo_path %}
+                <div class="flex items-center gap-3">
+                    <img src="{{ url_for('static', filename='uploads/' + shop.logo_path) }}" alt="Logo" class="w-16 h-16 rounded-xl object-contain border p-1 bg-white">
+                </div>
+            {% endif %}
+        </div>
+
+        <form action="{{ url_for('shop.settings') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Shop Name</label>
+                    <input type="text" name="shop_name" value="{{ shop.shop_name }}" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-semibold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Owner Name</label>
+                    <input type="text" name="owner_name" value="{{ shop.owner_name }}" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mobile Number</label>
+                    <input type="tel" name="mobile" value="{{ shop.mobile }}" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
+                    <input type="email" name="email" value="{{ shop.email or '' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">GSTIN Number</label>
+                    <input type="text" name="gstin" value="{{ shop.gstin or '' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-mono uppercase">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Address</label>
+                    <textarea name="address" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">{{ shop.address }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">City</label>
+                    <input type="text" name="city" value="{{ shop.city or '' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">State</label>
+                    <input type="text" name="state" value="{{ shop.state or '' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Invoice Prefix</label>
+                    <input type="text" name="invoice_prefix" value="{{ shop.invoice_prefix }}" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-bold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Tax Calculation Mode</label>
+                    <select name="tax_type" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium bg-white">
+                        <option value="GST" {% if shop.tax_type == 'GST' %}selected{% endif %}>GST Mode (CGST + SGST)</option>
+                        <option value="NON_GST" {% if shop.tax_type == 'NON_GST' %}selected{% endif %}>Non-GST Mode (Exempt/Retail)</option>
+                    </select>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Invoice Footer Message</label>
+                    <input type="text" name="footer_note" value="{{ shop.footer_note or 'Thank you for shopping with us!' }}" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 text-sm font-medium">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Update Shop Logo</label>
+                    <input type="file" name="logo" accept="image/*" class="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                </div>
+            </div>
+
+            <div class="pt-4 border-t flex justify-end">
+                <button type="submit" class="px-6 py-3 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20 transition">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

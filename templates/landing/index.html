@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block title %}MyBillingSystem - Simple & Smart Billing Software for Indian Shops{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="relative pt-12 pb-24 hero-gradient overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Left Hero Content -->
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 border border-brand-200 text-brand-700 font-semibold text-xs uppercase tracking-wider shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-brand-600 animate-pulse"></span>
+                    🇮🇳 #1 SaaS Billing App for Indian Shops
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Simple & Smart <span class="gradient-text">Billing Software</span> for Your Shop
+                </h1>
+                
+                <p class="text-lg sm:text-xl text-slate-600 max-w-2xl leading-relaxed font-normal">
+                    Create professional bills, manage products and customers, track daily sales, and share digital invoices directly with customers on <strong class="text-emerald-600 font-bold">WhatsApp</strong>.
+                </p>
+
+                <!-- CTAs -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                    <a href="{{ url_for('auth.register') }}" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base bg-brand-600 hover:bg-brand-700 text-white shadow-xl shadow-brand-600/30 transition-all text-center">
+                        Start Billing Free &rarr;
+                    </a>
+                    <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 shadow-sm transition-all text-center">
+                        See How It Works
+                    </a>
+                </div>
+
+                <!-- Trust Points -->
+                <div class="pt-6 border-t border-slate-200/80 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs sm:text-sm font-semibold text-slate-700">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <span>Easy to use</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <span>Fast billing</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <span>WhatsApp sharing</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <span>Secure shop data</span>
+                    </div>
+                    <div class="flex items-center gap-2 sm:col-span-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <span>Mobile & Laptop sync</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Hero Dashboard Graphic -->
+            <div class="lg:col-span-5 relative">
+                <div class="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200/80 relative z-10 space-y-5">
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold text-lg">A</div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base">ABC General Store</h3>
+                                <p class="text-xs text-slate-500">GSTIN: 27AAAAA0000A1Z5</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">INV-000123</span>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-3">
+                        <div class="flex justify-between text-xs font-semibold text-slate-500 uppercase">
+                            <span>Item</span>
+                            <span>Qty</span>
+                            <span>Total</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-medium text-slate-800">
+                            <span>Men's Cotton T-Shirt</span>
+                            <span>2 Pcs</span>
+                            <span>₹1,000.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-medium text-slate-800">
+                            <span>Fortune Refined Oil 1L</span>
+                            <span>3 Pcs</span>
+                            <span>₹540.00</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5 text-xs text-slate-600 border-t pt-3">
+                        <div class="flex justify-between"><span>Subtotal:</span><span class="font-semibold">₹1,540.00</span></div>
+                        <div class="flex justify-between"><span>GST (5% & 18%):</span><span class="font-semibold">₹147.00</span></div>
+                        <div class="flex justify-between text-base font-extrabold text-slate-900 border-t pt-2">
+                            <span>Grand Total:</span>
+                            <span class="text-brand-600">₹1,687.00</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <div class="py-2.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold flex items-center justify-center gap-1.5">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.84 9.84 0 0 0 12.04 2z"/></svg>
+                            <span>WhatsApp Ready</span>
+                        </div>
+                        <div class="py-2.5 rounded-xl bg-brand-50 text-brand-700 border border-brand-200 text-xs font-bold flex items-center justify-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+                            <span>Download PDF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FEATURES SECTION -->
+<section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Packed with Power</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Everything Indian Shop Owners Need</h2>
+            <p class="text-slate-600 text-base sm:text-lg">Designed specifically for general stores, mobile shops, clothing outlets, electronics, and local retailers.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center shadow-lg shadow-brand-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">1. Professional Billing</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Create beautiful, branded invoices in seconds with custom logo, GSTIN, and itemized calculations.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.84 9.84 0 0 0 12.04 2z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">2. WhatsApp Invoice</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Share bill summaries and secure invoice links directly to your customer's WhatsApp in one tap.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">3. Product Management</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Organize products with SKU, category, GST rates, stock alerts, and units (Kg, Piece, Liter, Box).</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">4. Customer Directory</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Save customer contact details, purchase history, total bills created, and track outstanding balances.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">5. GST Calculations</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Automatic calculation of CGST, SGST, IGST, taxable amount, and line item discounts in real-time.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">6. Sales Dashboard</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Monitor today's sales, total revenue, bill count, low stock warnings, and daily growth charts.</p>
+            </div>
+
+            <!-- Feature 7 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">7. Invoice History</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Filter past bills by date, customer, or payment status. Re-print or re-send invoices at any time.</p>
+            </div>
+
+            <!-- Feature 8 -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 card-hover space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center shadow-lg shadow-teal-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">8. Multi-Tenant Cloud</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Access your shop data seamlessly from your mobile phone on the shop floor or laptop at home.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- HOW IT WORKS SECTION -->
+<section id="how-it-works" class="py-20 bg-slate-50 border-t border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-100/50 px-3 py-1 rounded-full border border-brand-200">Simple 4-Step Process</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">How MyBillingSystem Works</h2>
+            <p class="text-slate-600 text-base sm:text-lg">Start creating digital invoices for your business in less than 2 minutes.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+            <!-- Step 1 -->
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4 relative shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md shadow-brand-500/30">1</div>
+                <h3 class="text-lg font-bold text-slate-900">Create Account</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">Sign up with your email and mobile number for free.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4 relative shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md shadow-brand-500/30">2</div>
+                <h3 class="text-lg font-bold text-slate-900">Add Shop Details</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">Upload your shop logo, GSTIN number, address, and mobile.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4 relative shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md shadow-brand-500/30">3</div>
+                <h3 class="text-lg font-bold text-slate-900">Add Items & Bill</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">Select products, set rates and discounts; totals compute instantly.</p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4 relative shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md shadow-brand-500/30">4</div>
+                <h3 class="text-lg font-bold text-slate-900">Print or WhatsApp</h3>
+                <p class="text-slate-600 text-xs sm:text-sm">Download A4 PDF, print physical receipt, or share link on WhatsApp.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- PRICING SECTION -->
+<section id="pricing" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Transparent Pricing</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Affordable Plans for Every Business</h2>
+            <p class="text-slate-600 text-base sm:text-lg">No hidden charges. Upgrade as your shop grows.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Free Plan -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200 space-y-6 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-200/70 px-3 py-1 rounded-md">Free Forever</span>
+                    <h3 class="text-2xl font-bold text-slate-900">FREE</h3>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold text-slate-900">₹0</span>
+                        <span class="text-slate-500 text-sm">/ month</span>
+                    </div>
+                    <p class="text-slate-600 text-sm">Ideal for new shop owners getting started with digital bills.</p>
+                    <ul class="space-y-3 pt-4 text-sm text-slate-700">
+                        <li class="flex items-center gap-2">✓ Up to 100 Invoices/mo</li>
+                        <li class="flex items-center gap-2">✓ Product & Customer Management</li>
+                        <li class="flex items-center gap-2">✓ PDF Download & Print</li>
+                        <li class="flex items-center gap-2">✓ Basic Sales Dashboard</li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('auth.register') }}" class="w-full py-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-800 text-center hover:bg-slate-100 transition">Get Started Free</a>
+            </div>
+
+            <!-- Pro Plan (Featured) -->
+            <div class="p-8 rounded-3xl bg-brand-900 text-white border-2 border-brand-500 space-y-6 flex flex-col justify-between relative shadow-2xl scale-105">
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-extrabold uppercase px-4 py-1 rounded-full shadow-md">
+                    Most Popular
+                </div>
+                <div class="space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-300 bg-brand-800 px-3 py-1 rounded-md">Growth Business</span>
+                    <h3 class="text-2xl font-bold text-white">PRO</h3>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold text-white">₹299</span>
+                        <span class="text-brand-300 text-sm">/ month</span>
+                    </div>
+                    <p class="text-brand-200 text-sm">For active retail stores needing WhatsApp sharing & reports.</p>
+                    <ul class="space-y-3 pt-4 text-sm text-brand-100">
+                        <li class="flex items-center gap-2">✓ Unlimited Invoices</li>
+                        <li class="flex items-center gap-2">✓ 1-Click WhatsApp Sharing</li>
+                        <li class="flex items-center gap-2">✓ Custom Shop Logo on Bills</li>
+                        <li class="flex items-center gap-2">✓ GST Summary & Sales Reports</li>
+                        <li class="flex items-center gap-2">✓ Stock Alert Warnings</li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('auth.register') }}" class="w-full py-3.5 rounded-xl font-bold text-sm bg-brand-500 hover:bg-brand-600 text-white text-center shadow-lg shadow-brand-500/40 transition">Start Free Trial</a>
+            </div>
+
+            <!-- Business Plan -->
+            <div class="p-8 rounded-3xl bg-slate-50 border border-slate-200 space-y-6 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-200/70 px-3 py-1 rounded-md">Enterprise</span>
+                    <h3 class="text-2xl font-bold text-slate-900">BUSINESS</h3>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold text-slate-900">₹699</span>
+                        <span class="text-slate-500 text-sm">/ month</span>
+                    </div>
+                    <p class="text-slate-600 text-sm">Advanced features for multiple branches and full API access.</p>
+                    <ul class="space-y-3 pt-4 text-sm text-slate-700">
+                        <li class="flex items-center gap-2">✓ Everything in Pro</li>
+                        <li class="flex items-center gap-2">✓ Priority 24/7 Phone Support</li>
+                        <li class="flex items-center gap-2">✓ CSV/Excel Data Exports</li>
+                        <li class="flex items-center gap-2">✓ Custom Invoice Prefixes</li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('auth.register') }}" class="w-full py-3 rounded-xl font-bold text-sm bg-white border border-slate-300 text-slate-800 text-center hover:bg-slate-100 transition">Choose Business</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FAQ ACCORDION -->
+<section id="faq" class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div class="text-center space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-100/50 px-3 py-1 rounded-full border border-brand-200">Got Questions?</span>
+            <h2 class="text-3xl font-extrabold text-slate-900">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="space-y-4">
+            <details class="bg-white rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    What is MyBillingSystem?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    MyBillingSystem is a simple and smart online SaaS billing platform designed specifically for Indian shop owners, Kirana stores, clothing outlets, mobile repair shops, and local retailers to quickly generate bills, track sales, and send WhatsApp invoices.
+                </p>
+            </details>
+
+            <details class="bg-white rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    Can I create GST compliant invoices?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    Yes! You can configure GST rates (0%, 5%, 12%, 18%, 28%) and the system automatically calculates CGST, SGST, IGST, and taxable amounts for every bill.
+                </p>
+            </details>
+
+            <details class="bg-white rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    Can I use MyBillingSystem on both mobile and laptop?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    Yes! All your data is saved in secure cloud database storage. Create a bill on your mobile phone, and it automatically syncs with your laptop in real-time.
+                </p>
+            </details>
+
+            <details class="bg-white rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    How does WhatsApp invoice sharing work?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    After generating a bill, click "Send on WhatsApp". It generates a pre-formatted message with invoice details and a secure URL for your customer to open and download their bill directly.
+                </p>
+            </details>
+        </div>
+    </div>
+</section>
+
+
+<!-- FINAL CTA HERO -->
+<section class="py-20 bg-brand-900 text-white relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 text-center space-y-8 relative z-10">
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Ready to Upgrade Your Shop Billing?</h2>
+        <p class="text-brand-200 text-lg max-w-2xl mx-auto">Join thousands of Indian shop owners who trust MyBillingSystem for fast, professional digital billing.</p>
+        <div>
+            <a href="{{ url_for('auth.register') }}" class="inline-block px-10 py-4 rounded-2xl font-bold text-lg bg-emerald-500 hover:bg-emerald-600 text-white shadow-2xl shadow-emerald-500/40 transition-all">Start Billing Free Now &rarr;</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

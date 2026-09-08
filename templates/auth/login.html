@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Login - MyBillingSystem{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-slate-50 min-h-[80vh] flex items-center justify-center">
+    <div class="max-w-md w-full mx-auto px-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center font-bold text-2xl mx-auto shadow-md shadow-brand-500/30">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 14l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Login to Your Shop</h2>
+                <p class="text-slate-500 text-sm">Enter your credentials to access your billing system</p>
+            </div>
+
+            <form action="{{ url_for('auth.login') }}" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email or Mobile Number</label>
+                    <input type="text" name="email_or_mobile" required placeholder="demo@mybillingsystem.com or 9876543210" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm font-medium">
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+                        <a href="{{ url_for('auth.forgot_password') }}" class="text-xs font-bold text-brand-600 hover:underline">Forgot password?</a>
+                    </div>
+                    <input type="password" name="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm font-medium">
+                </div>
+
+                <div class="flex items-center">
+                    <input type="checkbox" name="remember" id="remember" class="w-4 h-4 text-brand-600 border-slate-300 rounded focus:ring-brand-500">
+                    <label for="remember" class="ml-2 text-sm text-slate-600 font-medium">Remember me</label>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all">
+                    Login to Dashboard &rarr;
+                </button>
+            </form>
+
+            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 text-xs space-y-1">
+                <span class="font-bold text-indigo-900 block">💡 Quick Demo Login:</span>
+                <p class="text-indigo-800">Email: <code class="font-mono bg-white px-1.5 py-0.5 rounded text-indigo-900 border">demo@mybillingsystem.com</code></p>
+                <p class="text-indigo-800">Password: <code class="font-mono bg-white px-1.5 py-0.5 rounded text-indigo-900 border">demo123</code></p>
+            </div>
+
+            <div class="text-center pt-4 border-t text-xs text-slate-500">
+                Don't have a shop account yet? <a href="{{ url_for('auth.register') }}" class="text-brand-600 font-bold hover:underline">Register free</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

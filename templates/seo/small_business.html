@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Billing Software for Small Business - MyBillingSystem{% endblock %}
+{% block meta_description %}Simple & affordable billing software for small business owners in India. Manage shop sales, customers, and inventory with ease.{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 space-y-8">
+        <div class="space-y-4">
+            <span class="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-bold rounded-full">Small Business SaaS</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Smart Billing Software for Small Business Owners</h1>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                As a small business owner, your time is best spent serving customers—not wrestling with slow desktop software or paper bill books. MyBillingSystem gives you a cloud-based dashboard accessible from any mobile or laptop.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 bg-slate-50 rounded-2xl border text-center space-y-2">
+                <div class="text-3xl font-extrabold text-brand-600">⚡ Fast</div>
+                <h4 class="font-bold text-slate-900">Create Bills in 10s</h4>
+                <p class="text-xs text-slate-500">Quick product selection and dynamic math.</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-2xl border text-center space-y-2">
+                <div class="text-3xl font-extrabold text-emerald-600">📱 Mobile</div>
+                <h4 class="font-bold text-slate-900">WhatsApp Sharing</h4>
+                <p class="text-xs text-slate-500">Send PDF bills via WhatsApp in 1 tap.</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-2xl border text-center space-y-2">
+                <div class="text-3xl font-extrabold text-indigo-600">☁️ Cloud</div>
+                <h4 class="font-bold text-slate-900">Multi-Device Sync</h4>
+                <p class="text-xs text-slate-500">Access same data on phone & laptop.</p>
+            </div>
+        </div>
+
+        <div class="text-center pt-4">
+            <a href="{{ url_for('auth.register') }}" class="inline-block px-8 py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-base shadow-xl">Get Started Free &rarr;</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

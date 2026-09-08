@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - MyBillingSystem Blog{% endblock %}
+
+{% block content %}
+<article class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 space-y-8">
+        <div class="space-y-4 border-b border-slate-200 pb-8">
+            <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full">Inventory Tips</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{{ post.title }}</h1>
+            <div class="flex items-center gap-3 text-xs text-slate-400 font-semibold">
+                <span>Published on {{ post.date }}</span>
+                <span>•</span>
+                <span>By {{ post.author }}</span>
+            </div>
+        </div>
+
+        <div class="prose max-w-none text-slate-700 space-y-6 text-base leading-relaxed">
+            <p>Effective inventory management is the secret to retail profitability. Running out of fast-selling stock leads to lost customers, while over-stocking slow items locks up cash flow.</p>
+
+            <h2 class="text-2xl font-bold text-slate-900">5 Essential Stock Tips</h2>
+            <ol class="list-decimal pl-6 space-y-2">
+                <li>Set up automatic low-stock warnings (e.g. alert when quantity drops below 5 units).</li>
+                <li>Categorize products logically (e.g. Groceries vs Dairy vs Household).</li>
+                <li>Track purchase price vs selling price to maintain clear profit margins.</li>
+                <li>Perform monthly stock audits using MyBillingSystem product inventory lists.</li>
+                <li>Analyze top-selling products using sales analytics reports.</li>
+            </ol>
+        </div>
+    </div>
+</article>
+{% endblock %}

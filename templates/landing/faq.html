@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ - Frequently Asked Questions - MyBillingSystem{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 space-y-8">
+        <div class="text-center space-y-4">
+            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Help Center</span>
+            <h1 class="text-4xl font-extrabold text-slate-900">Frequently Asked Questions</h1>
+            <p class="text-slate-600 text-base">Everything you need to know about MyBillingSystem.</p>
+        </div>
+
+        <div class="space-y-4">
+            <details class="bg-slate-50 rounded-2xl p-6 border border-slate-200 group" open>
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    What is MyBillingSystem?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    MyBillingSystem is an online billing and invoice management platform designed primarily for Indian shop owners, small businesses, retail stores, and local Kirana businesses.
+                </p>
+            </details>
+
+            <details class="bg-slate-50 rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    Can I create GST invoices?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    Yes! You can configure GST rates (0%, 5%, 12%, 18%, 28%) and the system automatically calculates CGST, SGST, IGST, and taxable amounts for every bill.
+                </p>
+            </details>
+
+            <details class="bg-slate-50 rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    Can I use MyBillingSystem on mobile and laptop?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    Yes! You can access the exact same shop data from mobile phones, tablets, and laptops seamlessly.
+                </p>
+            </details>
+
+            <details class="bg-slate-50 rounded-2xl p-6 border border-slate-200 group">
+                <summary class="font-bold text-lg text-slate-900 cursor-pointer flex justify-between items-center">
+                    Is my shop data secure?
+                    <span class="text-brand-600 group-open:rotate-180 transition-transform">&darr;</span>
+                </summary>
+                <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                    Absolutely. Every shop's data is strictly isolated with database-level multi-tenant security and password hashing.
+                </p>
+            </details>
+        </div>
+    </div>
+</section>
+{% endblock %}

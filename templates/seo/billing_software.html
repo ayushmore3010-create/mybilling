@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Best Billing Software for Indian Shops - MyBillingSystem{% endblock %}
+{% block meta_description %}Discover the best online billing software for shops in India. Create professional GST bills, manage inventory, and send invoices on WhatsApp.{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 space-y-8">
+        <div class="space-y-4">
+            <span class="px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold rounded-full">SaaS Solution Guide</span>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Best Billing Software for Indian Shops & Retailers</h1>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                In today's fast-moving retail environment, managing shop sales with traditional paper bill books leads to calculation mistakes, lost stock records, and slow checkout queues. MyBillingSystem is designed from the ground up for Indian shop owners to modernize their billing workflow.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                <h3 class="font-bold text-slate-900 text-lg">Instant GST Invoice Creation</h3>
+                <p class="text-sm text-slate-600">Select items from your pre-loaded product directory or type line items directly. Subtotals, discounts, CGST, and SGST compute dynamically without page reloads.</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                <h3 class="font-bold text-slate-900 text-lg">WhatsApp Billing Integration</h3>
+                <p class="text-sm text-slate-600">Eliminate paper receipt expenses by sending digital invoice links straight to your customer's WhatsApp number in a single click.</p>
+            </div>
+        </div>
+
+        <div class="bg-brand-900 text-white p-8 rounded-3xl space-y-4 text-center">
+            <h2 class="text-2xl font-bold">Ready to Simplify Your Shop Billing?</h2>
+            <p class="text-brand-200 text-sm">Join thousands of Indian businesses already using MyBillingSystem.</p>
+            <div>
+                <a href="{{ url_for('auth.register') }}" class="inline-block px-8 py-3.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm shadow-lg">Start Billing Free &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

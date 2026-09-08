@@ -60,7 +60,6 @@ Start the Flask dev server:
 ```bash
 python run.py
 ```
-Open your browser and visit: `http://127.0.0.1:5000`
 
 ---
 
